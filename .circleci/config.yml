@@ -310,7 +310,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update --no-cache curl aws-cli nodejs npm
+            apk add --update --no-cache curl aws-cli
       # - attach_workspace:
       #     at: ~/
       - run:
@@ -323,13 +323,11 @@ jobs:
             --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
-            curl --connect-timeout 5 "${API_URL}/api/status"
-            echo "smoke test start"
-            if curl "${API_URL}/api/status" | grep "ok"
+            if curl -s "${API_URL}/api/status" | grep "ok"
             then
-                return 0
+              return 0
             else
-                return 1
+              return 1
             fi
       - run:
           name: Frontend smoke test.
@@ -342,8 +340,8 @@ jobs:
             else
               return 1
             fi
-      - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      # - destroy-environment:
+      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
