@@ -323,15 +323,8 @@ jobs:
             --filters Name=tag:aws:cloudformation:stack-name,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} \
             --output text)
             export API_URL="http://${BACKEND_IP}:3030"
-            echo "${API_URL}"
-            curl "${API_URL}/api/status"
-            echo "smoke test start"
-            if curl "${API_URL}/api/status" | grep "ok"
-            then
-              return 0
-            else
-              return 1
-            fi
+            echo $API_URL
+            if curl --connect-timeout 5 "${API_URL}/api/status" | grep "ok"; then return 0; else return 1; fi
       - run:
           name: Frontend smoke test.
           command: |
@@ -339,12 +332,12 @@ jobs:
             echo $URL
             if curl ${URL} | grep "Welcome"
             then
-              return 0
+              return 1
             else
               return 1
             fi
-      # - destroy-environment:
-      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
