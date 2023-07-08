@@ -186,6 +186,7 @@ jobs:
       - run:
           name: Configure server
           command: |
+            # add environment variables to server
             echo ENVIRONMENT=production > backend/.env
             echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION >> backend/.env
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> backend/.env
@@ -310,7 +311,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update --no-cache curl aws-cli
+            apk add --update --no-cache curl aws-cli nodejs npm
       # - attach_workspace:
       #     at: ~/
       - run:
@@ -323,7 +324,9 @@ jobs:
             --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
-            if curl -s "${API_URL}/api/status" | grep "ok"
+            curl "${API_URL}/api/status"
+            echo "smoke test start"
+            if curl "${API_URL}/api/status" | grep "ok"
             then
               return 0
             else
