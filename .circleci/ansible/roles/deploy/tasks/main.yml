@@ -33,3 +33,8 @@
   shell: |
     pm2 delete all
     pm2 start npm -- start
+- name: "Start BE"
+  become: true
+  command: pm2 start -f ./main.js
+  args:
+    chdir: /home/ubuntu/dist
