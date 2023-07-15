@@ -1,0 +1,6 @@
+Web cloud front:
+http://d2203e899yaj44.cloudfront.net/#/employees
+
+Public URL S3
+http://udapeople-efecb49.s3-website-us-east-1.amazonaws.com
+
